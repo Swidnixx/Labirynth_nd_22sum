@@ -8,8 +8,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 12f;
     [SerializeField] LayerMask groundMask;
 
-    Vector3 velocity;
     CharacterController controller;
+    float velocityY;
+    bool grounded;
 
     void Start()
     {
@@ -22,14 +23,22 @@ public class PlayerController : MonoBehaviour
         GroundCheck();
     }
 
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.CompareTag("Pickup"))
+        {
+            hit.gameObject.GetComponent<Pickup>().Picked();
+        }
+    }
+
     void GroundCheck()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f, groundMask))
+        if(Physics.Raycast(transform.position, Vector3.down, out hit, 1.1f, groundMask))
         {
-            string groundType = hit.collider.tag;
-            //print(groundType);
+            grounded = true;
 
+            string groundType = hit.collider.tag;
             switch(groundType)
             {
                 case "GroundSlow":
@@ -45,6 +54,10 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
+        else
+        {
+            grounded = false;
+        }
     }
 
     void PlayerMove()
@@ -54,5 +67,16 @@ public class PlayerController : MonoBehaviour
 
         Vector3 move = (z * transform.forward) + (x * transform.right);
         controller.Move(move * speed * Time.deltaTime);
+
+        if(!grounded)
+        {
+            velocityY += 10 * Time.deltaTime;
+            if (velocityY > 30) velocityY = 30;
+            controller.Move(Vector3.down * velocityY * Time.deltaTime);
+        }
+        else
+        {
+            velocityY = 0;
+        }
     }
 }

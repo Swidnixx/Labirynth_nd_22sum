@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GroundSlow
   - GroundFast
+  - Pickup
   layers:
   - Default
   - TransparentFX
