@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -8,10 +9,14 @@ public class CameraController : MonoBehaviour
     Transform playerTransform;
     float xRot = 0;
 
+    List<PortalVis> portals;
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         playerTransform = transform.parent;
+
+        portals = FindObjectsOfType<PortalVis>().ToList();
     }
 
 
@@ -25,5 +30,13 @@ public class CameraController : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRot, 0, 0);
         playerTransform.Rotate(0, mouseX, 0);
+    }
+
+    private void OnPreRender()
+    {
+        foreach(PortalVis portal in portals)
+        {
+            portal.Render();
+        }
     }
 }
