@@ -9,14 +9,14 @@ public class CameraController : MonoBehaviour
     Transform playerTransform;
     float xRot = 0;
 
-    List<PortalVis> portals;
+    List<Portal> portals;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         playerTransform = transform.parent;
 
-        portals = FindObjectsOfType<PortalVis>().ToList();
+        portals = FindObjectsOfType<Portal>().ToList();
     }
 
 
@@ -32,9 +32,9 @@ public class CameraController : MonoBehaviour
         playerTransform.Rotate(0, mouseX, 0);
     }
 
-    private void OnPreRender()
+    private void OnPreCull()
     {
-        foreach(PortalVis portal in portals)
+        foreach(Portal portal in portals)
         {
             portal.Render();
         }

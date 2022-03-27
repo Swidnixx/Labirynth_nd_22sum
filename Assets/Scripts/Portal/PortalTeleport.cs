@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PortalTeleport : MonoBehaviour
 {
-    [SerializeField] Transform receiver;
-    [SerializeField] Transform player;
+    public Transform receiver;
+    public Transform player;
 
     bool playerIsPassing;
 
@@ -19,7 +19,10 @@ public class PortalTeleport : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        playerIsPassing = false;
+        if (other.CompareTag("Player"))
+        {
+            playerIsPassing = false;
+        }
     }
 
     private void FixedUpdate()
@@ -43,11 +46,12 @@ public class PortalTeleport : MonoBehaviour
 
             if(dotProduct < 0)
             {
-                float rotationDiff = -Quaternion.Angle(transform.rotation, receiver.rotation);
-                rotationDiff += 180;
-                Vector3 positionOffset = Quaternion.Euler(0, rotationDiff, 0) * portalToPlayer;
-                player.Rotate(Vector3.up, rotationDiff);
-                player.position = receiver.position + positionOffset;
+                //float rotationDiff = -Quaternion.Angle(transform.rotation, receiver.rotation);
+                //rotationDiff += 180;
+                //Vector3 positionOffset = Quaternion.Euler(0, rotationDiff, 0) * portalToPlayer;
+                //player.Rotate(Vector3.up, rotationDiff);
+                player.position = new Vector3(receiver.position.x, player.position.y, receiver.position.z);
+                player.rotation = Quaternion.LookRotation(receiver.up);
                 playerIsPassing = false;
             }
         }

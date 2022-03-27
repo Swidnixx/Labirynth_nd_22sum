@@ -2,19 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PortalVis : MonoBehaviour
+public class Portal : MonoBehaviour
 {
-    public PortalVis linkedPortal;
-    public MeshRenderer screen;
+    public Portal linkedPortal;
+    public MeshRenderer renderPlane;
     Camera playerCam;
     Camera portalCam;
     RenderTexture viewTexture;
+
+    PortalTeleport teleport;
 
     private void Awake()
     {
         playerCam = Camera.main;
         portalCam = GetComponentInChildren<Camera>();
         portalCam.enabled = false;
+
+        teleport = GetComponentInChildren<PortalTeleport>();
+
+        teleport.player = playerCam.transform.parent;
+        teleport.receiver = linkedPortal.GetComponentInChildren<PortalTeleport>().transform;
     }
 
     void CreateViewTexture()
@@ -27,24 +34,21 @@ public class PortalVis : MonoBehaviour
             viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
 
             portalCam.targetTexture = viewTexture;
-            linkedPortal.screen.material.SetTexture("_MainTex", viewTexture);
+            linkedPortal.renderPlane.material.SetTexture("_MainTex", viewTexture);
         }
     }
 
     public void Render()
     {
-        screen.enabled = false;
+        renderPlane.enabled = false;
         CreateViewTexture();
 
-        var m = transform.localToWorldMatrix * linkedPortal.transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
+        var m = transform.localToWorldMatrix * linkedPortal.transform.worldToLocalMatrix * 
+            playerCam.transform.localToWorldMatrix;
         portalCam.transform.SetPositionAndRotation(m.GetColumn(3), m.rotation);
+        //portalCam.transform.Rotate(Vector3.up * 180);
 
         portalCam.Render();
-        screen.enabled = true;
+        renderPlane.enabled = true;
     }
-
-    //private void Update()
-    //{
-    //    Render();
-    //}
 }
