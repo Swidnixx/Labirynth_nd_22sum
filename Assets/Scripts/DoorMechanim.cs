@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class DoorMechanim : MonoBehaviour
     public Transform door;
     public Transform closedPos;
     public Transform openPos;
-    public bool open = false;
+    private bool open = false;
 
     void Start()
     {
@@ -25,5 +26,10 @@ public class DoorMechanim : MonoBehaviour
         {
             door.position = Vector3.MoveTowards(door.position, closedPos.position, Time.deltaTime * speed);
         }
+    }
+
+    public void Open()
+    {
+        open = true;
     }
 }

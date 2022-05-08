@@ -5,10 +5,32 @@ using UnityEngine;
 
 public class LockMechanim : MonoBehaviour
 {
-
+    public DoorMechanim[] doors;
     public KeyColor properKey;
-    bool locked = false;
+    public Animator keyAnimator;
+    bool alreadyUsed = false;
     bool inRange;
+
+    private void Update()
+    {
+        if(!alreadyUsed && Input.GetKeyDown(KeyCode.E) && inRange)
+        {
+            if (CheckKey()) 
+            {
+                alreadyUsed = true;
+                keyAnimator.SetBool("useKey", true);
+                Invoke(nameof(Unlock), keyAnimator.GetCurrentAnimatorStateInfo(0).length);
+            }
+        }
+    }
+
+    private void Unlock()
+    {
+        foreach(DoorMechanim d in doors)
+        {
+            d.Open();
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,6 +52,34 @@ public class LockMechanim : MonoBehaviour
 
     public bool CheckKey()
     {
-        throw new NotImplementedException();
+        switch (properKey)
+        {
+            case KeyColor.Red:
+                if(GameManager.instance.redKey > 0)
+                {
+                    GameManager.instance.redKey--;
+                    return true;
+                }
+                break;
+
+            case KeyColor.Green:
+                if (GameManager.instance.greenKey > 0)
+                {
+                    GameManager.instance.greenKey--;
+                    return true;
+                }
+                break;
+
+            case KeyColor.Gold:
+                if (GameManager.instance.goldKey > 0)
+                {
+                    GameManager.instance.goldKey--;
+                    return true;
+                }
+                break;
+        }
+
+        Debug.Log("Nie masz odpowiedniego klucza");
+        return false;
     }
 }
