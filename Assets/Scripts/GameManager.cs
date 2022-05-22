@@ -12,6 +12,13 @@ public enum KeyColor
 }
 public class GameManager : MonoBehaviour
 {
+    //Sound 
+    public AudioSource audioSource;
+    public AudioClip pauseClip;
+    public AudioClip loseClip;
+    public AudioClip winClip;
+
+    //Singleton
     public static GameManager instance;
 
     [SerializeField] int secondsLeft = 100;
@@ -39,7 +46,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InvokeRepeating(nameof(TimerTick), 3, 1);
-        //StartCoroutine(Stopper());
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -54,6 +62,8 @@ public class GameManager : MonoBehaviour
         //Input.GetKeyDown(KeyCode.Escape);
         if(Input.GetButtonDown("Cancel"))
         {
+            PlayClip(pauseClip);
+
             if(gamePaused)
             {
                 Debug.Log("Game Resumed");
@@ -93,6 +103,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game ended");
         CancelInvoke(nameof(TimerTick));
         Time.timeScale = 0;
+    }
+
+    public void PlayClip(AudioClip clip)
+    {
+        audioSource.clip = clip;
+        audioSource.Play();
     }
     #endregion
 
