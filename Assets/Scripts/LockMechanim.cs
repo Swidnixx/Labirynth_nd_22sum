@@ -37,7 +37,21 @@ public class LockMechanim : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             inRange = true;
-            Debug.Log("Lock is in range");
+            GameManager.instance.InfoText.text = "Use the Lock"; 
+            switch (properKey)
+            {
+                case KeyColor.Red:
+                    GameManager.instance.InfoText.color = Color.red;
+                    break;
+
+                case KeyColor.Green:
+                    GameManager.instance.InfoText.color = Color.green;
+                    break;
+
+                case KeyColor.Gold:
+                    GameManager.instance.InfoText.color = Color.yellow;
+                    break;
+            }
         }
     }
 
@@ -46,7 +60,7 @@ public class LockMechanim : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             inRange = false;
-            Debug.Log("Lock is not in range anymore");
+            GameManager.instance.InfoText.text = "";
         }
     }
 
@@ -58,6 +72,7 @@ public class LockMechanim : MonoBehaviour
                 if(GameManager.instance.redKey > 0)
                 {
                     GameManager.instance.redKey--;
+                    GameManager.instance.redKeyText.text = GameManager.instance.redKey.ToString();
                     return true;
                 }
                 break;
@@ -66,6 +81,7 @@ public class LockMechanim : MonoBehaviour
                 if (GameManager.instance.greenKey > 0)
                 {
                     GameManager.instance.greenKey--;
+                    GameManager.instance.greenKeyText.text = GameManager.instance.greenKey.ToString();
                     return true;
                 }
                 break;
@@ -74,6 +90,7 @@ public class LockMechanim : MonoBehaviour
                 if (GameManager.instance.goldKey > 0)
                 {
                     GameManager.instance.goldKey--;
+                    GameManager.instance.goldKeyText.text = GameManager.instance.goldKey.ToString();
                     return true;
                 }
                 break;

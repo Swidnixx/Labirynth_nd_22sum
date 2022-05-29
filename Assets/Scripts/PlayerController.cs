@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour
         {
             hit.gameObject.GetComponent<Pickup>().Picked();
         }
+
+        if(hit.gameObject.CompareTag("Win"))
+        {
+            GameManager.instance.WinGame();
+        }
     }
 
     void GroundCheck()
